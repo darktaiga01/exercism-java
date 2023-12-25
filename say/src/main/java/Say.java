@@ -1,10 +1,19 @@
+import java.util.Scanner;
+
 public class Say {
 
     public String say(long number) {
-        String[] oneNumber = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven",
-                "twelve", "thirteen", "fourteen", "fiveteen", "sixteen", "seventeen", "eighteen", "nineteen"};
-        String[] twoNumber = {"", "", "twenty", "thirty", "fourty", "fifty", "sixty", "seventy", "eightty", "ninety"};
-        String[] decimal = {"thousand", "milion", "billion", ""};
+        String[] oneNumber = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven",
+                "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
+        String[] twoNumber = {"", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
+        String[] decimal = {"thousand", "million", "billion", ""};
+        if (number >= 0 && number < 20) {
+           return oneNumber[(int) number];
+        } else if (number >= 20 && number < 100) {
+            int unit = (int) (number % 10);
+            int dozen = (int) (number / 10);
+            return String.join("-", twoNumber[dozen], oneNumber[unit]);
+        }
         long minNumber = 0L;
         long maxNumber = 999999999999L;
         long step = 1000L;
@@ -27,7 +36,11 @@ public class Say {
             } else {
                 int unit = dozens % 10;
                 int dozen = dozens / 10;
-                hundredNumberString = String.join("-", twoNumber[dozen], oneNumber[unit]);
+                if (dozen % 10 == 0) {
+                    hundredNumberString = twoNumber[dozen];
+                } else {
+                    hundredNumberString = String.join("-", twoNumber[dozen], oneNumber[unit]);
+                }
             }
             if (hundred > 0) {
                 hundredNumberString = String.join(" ", oneNumber[hundred], "hundred", hundredNumberString);
@@ -42,8 +55,14 @@ public class Say {
     }
 
     public static void main(String[] args) {
+
+        boolean isRunning = true;
         Say say = new Say();
-        long number = 987_654_321_123L;
-        System.out.println(say.say(100));
+        while (isRunning) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter number: ");
+            long number = scanner.nextLong();
+            System.out.println(say.say(number));
+        }
     }
 }
